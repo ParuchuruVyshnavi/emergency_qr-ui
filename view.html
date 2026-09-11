@@ -1,35 +1,53 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+
 <title>Emergency Details</title>
+
 <style>
+
 body{
 font-family:Arial;
 background:#ff4e50;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
+min-height:100vh;
 margin:0;
+padding:20px;
+box-sizing:border-box;
 }
 
 .card{
 background:white;
-padding:20px;
-border-radius:12px;
-width:320px;
+padding:25px;
+border-radius:15px;
+width:350px;
 text-align:center;
 box-shadow:0 5px 15px rgba(0,0,0,0.3);
 }
 
 h2{
 color:red;
+margin-bottom:20px;
+}
+
+.info{
+text-align:left;
+background:#f8f8f8;
+padding:15px;
+border-radius:10px;
 margin-bottom:15px;
 }
 
 p{
-margin:8px 0;
+margin:10px 0;
 font-size:15px;
+}
+
+.label{
+font-weight:bold;
 }
 
 button{
@@ -56,75 +74,199 @@ color:white;
 background:#28a745;
 color:white;
 }
+
 </style>
+
 </head>
+
 <body>
 
 <div class="card">
+
 <h2>🚨 EMERGENCY DETAILS</h2>
 
+<div class="info">
+
 <p id="name"></p>
+
 <p id="blood"></p>
+
 <p id="phone"></p>
+
+<p id="phone2"></p>
+
 <p id="address"></p>
 
-<button class="call" id="callBtn">📞 Call Now</button>
-<button class="sms" id="smsBtn">📩 Send SMS</button>
-<button class="hospital" id="hospitalBtn">🏥 Nearby Hospitals</button>
+<p id="medical"></p>
 
 </div>
 
+<button class="call" id="callBtn">
+📞 Call Primary Contact
+</button>
+
+<button class="sms" id="smsBtn">
+📩 Send SMS
+</button>
+
+<button class="hospital" id="hospitalBtn">
+🏥 Nearby Hospitals
+</button>
+
+</div>
+
+
 <script>
 
-let params = new URLSearchParams(window.location.search);
 
-let name = params.get("name");
-let blood = params.get("blood");
-let phone = params.get("phone");
-let address = params.get("address");
+// Get URL parameters
 
-document.getElementById("name").innerText = "Name: " + name;
-document.getElementById("blood").innerText = "Blood Group: " + blood;
-document.getElementById("phone").innerText = "Phone: " + phone;
-document.getElementById("address").innerText = "Address: " + address;
+let params =
+new URLSearchParams(window.location.search);
 
 
-document.getElementById("callBtn").onclick = function(){
-    window.location.href = "tel:" + phone;
+// Emergency details
+
+let name =
+params.get("name") || "Not provided";
+
+let blood =
+params.get("blood") || "Not provided";
+
+let phone =
+params.get("phone") || "Not provided";
+
+let phone2 =
+params.get("phone2") || "Not provided";
+
+let address =
+params.get("address") || "Not provided";
+
+let medical =
+params.get("medical") || "None";
+
+
+// Display information
+
+document.getElementById("name").innerHTML =
+"<span class='label'>👤 Name:</span> " +
+name;
+
+document.getElementById("blood").innerHTML =
+"<span class='label'>🩸 Blood Group:</span> " +
+blood;
+
+document.getElementById("phone").innerHTML =
+"<span class='label'>📞 Primary Contact:</span> " +
+phone;
+
+document.getElementById("phone2").innerHTML =
+"<span class='label'>📱 Second Contact:</span> " +
+phone2;
+
+document.getElementById("address").innerHTML =
+"<span class='label'>📍 Address:</span> " +
+address;
+
+document.getElementById("medical").innerHTML =
+"<span class='label'>🏥 Medical Conditions:</span> " +
+medical;
+
+
+// Call button
+
+document.getElementById("callBtn").onclick =
+function(){
+
+    if(phone !== "Not provided"){
+
+        window.location.href =
+        "tel:" + phone;
+
+    }
+
 };
 
 
-document.getElementById("smsBtn").onclick = function(){
-    let message = "Emergency Alert for " + name +
-    ". Blood Group: " + blood;
-    window.location.href =
-    "sms:" + phone + "?body=" + encodeURIComponent(message);
+// SMS button
+
+document.getElementById("smsBtn").onclick =
+function(){
+
+    if(phone !== "Not provided"){
+
+        let message =
+        "Emergency Alert for " +
+        name +
+        ". Blood Group: " +
+        blood +
+        ". Medical Conditions: " +
+        medical;
+
+        window.location.href =
+        "sms:" +
+        phone +
+        "?body=" +
+        encodeURIComponent(message);
+
+    }
+
 };
 
 
-document.getElementById("hospitalBtn").onclick = function(){
+// Nearby hospitals
+
+document.getElementById("hospitalBtn").onclick =
+function(){
 
     if(navigator.geolocation){
 
-        navigator.geolocation.getCurrentPosition(function(pos){
+        navigator.geolocation.getCurrentPosition(
 
-            let lat = pos.coords.latitude;
-            let lon = pos.coords.longitude;
+            function(pos){
 
-            let url =
-"https://www.google.com/maps/search/hospitals/@"
-+ lat + "," + lon + ",15z";
+                let lat =
+                pos.coords.latitude;
 
-            window.open(url, "_blank");
+                let lon =
+                pos.coords.longitude;
 
-        });
+                let url =
+                "https://www.google.com/maps/search/hospitals/@" +
+                lat + "," +
+                lon +
+                ",15z";
 
-    } else {
-        alert("Geolocation not supported");
+                window.open(
+                    url,
+                    "_blank"
+                );
+
+            },
+
+            function(){
+
+                alert(
+                    "Location permission is required to find nearby hospitals."
+                );
+
+            }
+
+        );
+
     }
+    else{
+
+        alert(
+            "Geolocation is not supported by this browser."
+        );
+
+    }
+
 };
 
 </script>
 
 </body>
+
 </html>
