@@ -16,7 +16,7 @@ return;
 }
 
 localStorage.setItem("loggedIn","true");
-window.location = "index.html";
+window.location = "main.html";
 });
 }
 
@@ -38,7 +38,7 @@ localStorage.setItem("user",
 JSON.stringify({name,email,password}));
 
 alert("Signup successful");
-window.location = "login.html";
+window.location = "index.html";
 });
 }
 
@@ -47,14 +47,14 @@ const logoutBtn = document.getElementById("logoutBtn");
 if(logoutBtn){
 logoutBtn.addEventListener("click", function(){
 localStorage.removeItem("loggedIn");
-window.location = "login.html";
+window.location = "index.html";
 });
 }
 
 
 if(window.location.pathname.includes("index.html")){
 if(localStorage.getItem("loggedIn") !== "true"){
-window.location = "login.html";
+window.location = "index.html";
 }
 }
 
